@@ -1,0 +1,24 @@
+<%= form_for @user, :url => user_transactions_path, :method => :post do |f| %>
+  <ul>
+    <%= f.fields_for :transaction do |tran| %>
+      <li>
+        <%= tran.label :type %>
+        <%= tran.text_field :type %>
+
+        <%= tran.label :category %>
+        <%= tran.text_field :category %>
+
+        <%= tran.label :stipend %>
+        <%= tran.number_field :stipend %>
+
+         <%= tran.label :amount%>
+        <%= tran.date_field :amount %>
+        <p>
+  <%= tran.submit %>
+</p>
+        ...
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+

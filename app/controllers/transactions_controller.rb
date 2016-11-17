@@ -1,8 +1,9 @@
 class TransactionsController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
+
   def new
-     @user=current_user
-    @tran=Transaction.new
+    @user = current_user
+    @tran = Transaction.new
   end
 
   def create
@@ -10,7 +11,8 @@ class TransactionsController < ApplicationController
     @tran=@user.transactions.create(transaction_param)
     if @tran.save
       redirect_to user_transactions_path(@user)
-    else render 'new'
+    else
+      render 'new'
     end
   end
 
@@ -28,25 +30,29 @@ class TransactionsController < ApplicationController
   end
 
   def index
-   @user=current_user
-       @trans=@user.transactions.all
-       respond_to do |format|
-        format.html
-        format.pdf do
-          pdf =PDF::Writer.new
-          @trans.each do |tran|
-            pdf.text trans.typ
-             pdf.text trans.category
-              pdf.text trans.amount
-               pdf.text trans.date
-             end
-             send_data pdf.render,filename: 'transaction.pdf', type: 'application/pdf',disposition: 'inline'
+    @user=current_user
+    @trans=@user.transactions.all
+    respond_to do |format|
+      format.html
+      format.pdf do
+        pdf =PDF::Writer.new
+        @trans.each do |tran|
+          pdf.text tran.typ
+          pdf.text tran.category
+          pdf.text tran.amount
+          pdf.text tran.date
+        end
+        send_data pdf.render, filename: 'transaction.pdf', type: 'application/pdf', disposition: 'inline'
+      end
+    end
   end
 
   def show
   end
+
   private
   def transaction_param
-    params.require(:transaction).permit(:typ,:category,:amount,:date)
+    params.require(:transaction).permit(:typ, :category, :amount, :date)
   end
+
 end
